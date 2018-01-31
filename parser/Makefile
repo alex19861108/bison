@@ -12,6 +12,6 @@ tokens.cpp: tokens.l
 	flex -o $@ $^
 
 parser: parser.cpp tokens.cpp node.cpp main.cpp
-	#g++ -o $@ `llvm-config --libs core jit native --cxxflags --ldflags -std=c++11 -Wno-deprecated-register -L/usr/local/lib -I /usr/local//Cellar/llvm/5.0.1/include/` *.cpp
-	g++ -o $@ -std=c++11 -Wno-deprecated-register -L/usr/local/lib -I /usr/local//Cellar/llvm/5.0.1/include/ *.cpp
+	#g++ -o $@ `llvm-config --libs core jit native --cxxflags --ldflags` *.cpp
+	g++ -o $@ -std=c++11 -Wno-deprecated-register -L/usr/local/lib -I /usr/local//Cellar/llvm/5.0.1/include/ $^
 

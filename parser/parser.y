@@ -14,8 +14,8 @@
     NStatement *stmt;
     NIdentifier *ident;
     NVariableDeclaration *var_decl;
-    std::vector *varvec;
-    std::vector *exprvec;
+    std::vector<NVariableDeclaration*> *varvec;
+    std::vector<NExpression*> *exprvec;
     std::string *string;
     int token;
 }
@@ -40,8 +40,9 @@
 %type  <expr> numeric expr
 %type  <varvec> func_decl_args
 %type  <exprvec> call_args
-%type  <expr> program stmts block
-%type  <node> stmt var_decl func_decl
+%type  <block> program stmts block
+%type  <stmt> stmt func_decl
+%type  <var_decl> var_decl
 %type  <token> comparison
 
 /* Operator precedence for mathematical operators */
@@ -59,8 +60,8 @@ stmts : stmt { $$ = new NBlock(); $$->statements.push_back($1); }
       | stmts stmt { $1->statements.push_back($2); }
       ;
 
-stmt : var_decl 
-	 | func_decl
+stmt : var_decl { $$ = $1; }
+	 | func_decl { $$ = $1; }
      | expr { $$ = new NExpressionStatement(*$1); }
      ;
 
@@ -84,8 +85,8 @@ func_decl_args : /*blank*/  { $$ = new VariableList(); }					/* */
 ident : TIDENTIFIER { $$ = new NIdentifier(*$<ident>1); delete $<ident>1; }
       ;
 
-numeric : TINTEGER { $$ = new NInteger(atol($<expr>1->c_str())); delete $<expr>1; }
-        | TDOUBLE { $$ = new NDouble(atof($<expr>1->c_str())); delete $<expr>1; }
+numeric : TINTEGER { $$ = new NInteger(atol($<string>1->c_str())); delete $<string>1; }
+        | TDOUBLE { $$ = new NDouble(atof($<string>1->c_str())); delete $<string>1; }
         ;
 
 expr : ident TEQUAL expr { $$ = new NAssignment(*$1, *$3); }
