@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <llvm/Value.h>
+#include <llvm/IR/Value.h>
  
 class CodeGenContext;
 class NStatement;
@@ -14,7 +14,7 @@ typedef std::vector<NVariableDeclaration*> VariableList;
 class Node {
 public:
     virtual ~Node() {}
-    virtual llvm::Value* codeGen(CodeGenContext& context) { }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 };
  
 class NExpression : public Node {
